@@ -5,7 +5,7 @@
         <div class="flex justify-start lg:w-0 lg:flex-1">
           <router-link to="/">
             <h1 class="flex-auto text-lg font-semibold text-gray-900">
-              OpenChat Hub
+              Sara
             </h1>
           </router-link>
         </div>
@@ -94,7 +94,7 @@
           <div class="flex items-center justify-between" @click="mobile_menu.status = false">
             <div>
               <h1 class="flex-auto text-lg font-semibold text-gray-900 sm:hidden">
-                OpenChat Hub
+                Sara
               </h1>
             </div>
             <div class="-mr-2">

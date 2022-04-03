@@ -9,6 +9,6 @@ module.exports = defineConfig({
       filename: 'index.html',
     }
   },
-  publicPath: process.env.NODE_ENV === 'production' ? '/openchat/' : '/',
+  publicPath: process.env.NODE_ENV === 'production' ? '/sara.inte/' : '/',
   transpileDependencies: true
 })
