@@ -27,4 +27,17 @@ const router = new VueRouter({
   routes
 })
 
+router.beforeEach((to, from, next) => {
+  if (localStorage.getItem('unified_token')) {
+    if (to.name !== 'manage') {
+      next({name: 'manage'});
+    }
+  } else {
+    if (to.name === 'manage') {
+      next({name: 'home'});
+    }
+  }
+  next();
+})
+
 export default router
