@@ -1,8 +1,8 @@
-import Vue from 'vue'
-import VueRouter from 'vue-router'
-import HomeView from '../views/HomeView.vue'
+import Vue from 'vue';
+import VueRouter from 'vue-router';
+import HomeView from '../views/HomeView.vue';
 
-Vue.use(VueRouter)
+Vue.use(VueRouter);
 
 const routes = [
   {
@@ -21,10 +21,23 @@ const routes = [
     component: () => import('../views/RegisterView.vue'),
     props: true
   }
-]
+];
 
 const router = new VueRouter({
   routes
-})
+});
 
-export default router
+router.beforeEach((to, from, next) => {
+  if (localStorage.getItem('unified_token')) {
+    if (to.name !== 'manage') {
+      next({name: 'manage'});
+    }
+  } else {
+    if (to.name === 'manage') {
+      next({name: 'home'});
+    }
+  }
+  next();
+});
+
+export default router;
