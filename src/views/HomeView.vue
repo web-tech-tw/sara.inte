@@ -23,7 +23,7 @@ export default {
   computed: {
     title() {
       if (!this.token) {
-        return '請輸入您的電子郵件：';
+        return '請輸入您的電子郵件地址：';
       } else {
         return '請輸入您的登入代碼：';
       }
@@ -38,7 +38,11 @@ export default {
   },
   methods: {
     submit() {
-      if (!this.answer) return;
+      this.status = '';
+      if (!this.answer) {
+        this.status = '請輸入資料';
+        return;
+      }
       if (!this.token) {
         this.do()
       } else {
@@ -66,7 +70,7 @@ export default {
                 }
               });
             } else {
-              this.status = `發生錯誤 (${error?.response?.status})`;
+              this.status = `發生錯誤 (${error?.response?.status || '無錯誤代碼'})`;
             }
           })
           .finally(() => this.loading = false);
@@ -79,7 +83,7 @@ export default {
       this.$axios.post('/login/verify', form)
           .then((xhr) => {
             if (xhr?.data?.token) {
-              this.status = '成功登入，憑證登錄中...';
+              this.status = '登入成功，憑證登錄中...';
               localStorage.setItem('unified_token', xhr.data.token);
               setTimeout(() => location.replace('https://web-tech-tw.github.io'), 500);
             } else {

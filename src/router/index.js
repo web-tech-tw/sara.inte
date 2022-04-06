@@ -16,6 +16,12 @@ const routes = [
     component: () => import('../views/ManageView.vue')
   },
   {
+    path: '/manage/email',
+    name: 'manage-email',
+    component: () => import('../views/ManageEmailView.vue'),
+    props: true
+  },
+  {
     path: '/register',
     name: 'register',
     component: () => import('../views/RegisterView.vue'),
@@ -29,7 +35,7 @@ const router = new VueRouter({
 
 router.beforeEach((to, from, next) => {
   if (localStorage.getItem('unified_token')) {
-    if (to.name !== 'manage') {
+    if (to.name !== 'manage' && to.name !== 'manage-email') {
       next({name: 'manage'});
     }
   } else {
