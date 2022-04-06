@@ -38,7 +38,11 @@ export default {
   },
   methods: {
     submit() {
-      if (!this.answer) return;
+      this.status = '';
+      if (!this.answer) {
+        this.status = '請輸入資料';
+        return;
+      }
       if (!this.token) {
         this.do()
       } else {
