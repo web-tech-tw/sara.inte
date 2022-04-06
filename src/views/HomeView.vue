@@ -23,7 +23,7 @@ export default {
   computed: {
     title() {
       if (!this.token) {
-        return '請輸入您的電子郵件：';
+        return '請輸入您的電子郵件地址：';
       } else {
         return '請輸入您的登入代碼：';
       }
