@@ -70,7 +70,7 @@ export default {
                 }
               });
             } else {
-              this.status = `發生錯誤 (${error?.response?.status})`;
+              this.status = `發生錯誤 (${error?.response?.status || '無錯誤代碼'})`;
             }
           })
           .finally(() => this.loading = false);
@@ -83,7 +83,7 @@ export default {
       this.$axios.post('/login/verify', form)
           .then((xhr) => {
             if (xhr?.data?.token) {
-              this.status = '成功登入，憑證登錄中...';
+              this.status = '登入成功，憑證登錄中...';
               localStorage.setItem('unified_token', xhr.data.token);
               setTimeout(() => location.replace('https://web-tech-tw.github.io'), 500);
             } else {
