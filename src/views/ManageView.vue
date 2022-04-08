@@ -45,12 +45,16 @@
           </div>
           <div class="p-6 bg-white border-gray-200 text-right">
             <button
-                class="bg-white-500 shadow-md text-sm text-black font-bold py-3 md:px-8 px-4 hover:bg-white-600 rounded mr-3"
-                @click="edit = false">取消
+                @click="edit = false"
+                class="bg-white-500 shadow-md text-sm text-black font-bold py-3 md:px-8 px-4 hover:bg-slate-100 rounded mr-3"
+            >
+              取消
             </button>
             <button
                 class="bg-sky-500 shadow-md text-sm text-white font-bold py-3 md:px-8 px-4 hover:bg-sky-600 rounded"
-                @click="update">確定修改
+                @click="update"
+            >
+              確定修改
             </button>
           </div>
         </div>
