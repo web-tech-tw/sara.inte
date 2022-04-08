@@ -2,7 +2,6 @@ import Vue from 'vue';
 import VueRouter from 'vue-router';
 import HomeView from '../views/HomeView.vue';
 import {replaceToLocationSafe} from "@/utils";
-import NotFoundView from '../views/NotFoundView.vue';
 
 Vue.use(VueRouter);
 
@@ -32,7 +31,7 @@ const routes = [
   {
     path: '*',
     name: 'not-found',
-    component: NotFoundView
+    component: () => import('../views/NotFoundView.vue'),
   }
 ];
 
