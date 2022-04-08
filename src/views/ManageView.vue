@@ -33,7 +33,7 @@
                   id="nickname"
                   v-model="field.nickname"
                   class="border-none bg-transparent px-4 py-1 text-gray-900 outline-none focus:outline-none"
-                  placeholder="暱稱"
+                  placeholder="例如：星川 サラ"
                   type="text"
               >
             </div>

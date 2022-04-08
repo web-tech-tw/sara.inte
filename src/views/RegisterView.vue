@@ -9,6 +9,7 @@
 </template>
 
 <script>
+import { redirect } from "@/utils";
 import InputModal from "@/components/InputModal";
 
 export default {
@@ -94,7 +95,7 @@ export default {
             if (xhr?.data?.token) {
               this.status = '註冊成功，憑證登錄中...';
               localStorage.setItem('unified_token', xhr.data.token);
-              setTimeout(() => location.replace('https://web-tech-tw.github.io'), 500);
+              redirect();
             } else {
               this.loading = false;
               this.status = '發生錯誤 (無錯誤代碼)';
