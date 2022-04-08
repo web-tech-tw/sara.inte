@@ -1,6 +1,7 @@
 import Vue from 'vue';
 import VueRouter from 'vue-router';
 import HomeView from '../views/HomeView.vue';
+import {replaceToLocationSafe} from "@/utils";
 
 Vue.use(VueRouter);
 
@@ -38,7 +39,7 @@ router.beforeEach((to, from, next) => {
     if (location.query) {
       const params = new URLSearchParams(location.query)
       if (params.has('refer')) {
-        location.replace(params.get('refer'))
+        replaceToLocationSafe(params.get('refer'))
       }
     }
     if (to.name !== 'manage' && to.name !== 'manage-email') {
