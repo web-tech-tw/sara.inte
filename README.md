@@ -1,24 +1,27 @@
 # sara.inte
 
-## Project setup
+無密碼式身分認證系統 [前端]
+
+## 專案設定
+
 ```
 npm install
 ```
 
-### Compiles and hot-reloads for development
+### 編譯且即時重新載入（開發環境）
+
 ```
 npm run serve
 ```
 
-### Compiles and minifies for production
+### 編譯且壓縮檔案大小（正式環境）
+
 ```
 npm run build
 ```
 
-### Lints and fixes files
+### 檢測並修正檔案（整理程式碼格式）
+
 ```
 npm run lint
 ```
-
-### Customize configuration
-See [Configuration Reference](https://cli.vuejs.org/config/).
