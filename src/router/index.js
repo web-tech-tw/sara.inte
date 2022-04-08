@@ -1,6 +1,7 @@
 import Vue from 'vue';
 import VueRouter from 'vue-router';
 import HomeView from '../views/HomeView.vue';
+import {replaceToLocationSafe} from "@/utils";
 
 Vue.use(VueRouter);
 
@@ -35,10 +36,23 @@ const router = new VueRouter({
 
 router.beforeEach((to, from, next) => {
   if (localStorage.getItem('unified_token')) {
+    if (location.search) {
+      const params = new URLSearchParams(location.search);
+      if (params.has('refer')) {
+        replaceToLocationSafe(params.get('refer'));
+        return;
+      }
+    }
     if (to.name !== 'manage' && to.name !== 'manage-email') {
       next({name: 'manage'});
     }
   } else {
+    if (location.search) {
+      const params = new URLSearchParams(location.search);
+      if (params.has('refer')) {
+        sessionStorage.setItem('sara_refer', params.get('refer'));
+      }
+    }
     if (to.name === 'manage') {
       next({name: 'home'});
     }

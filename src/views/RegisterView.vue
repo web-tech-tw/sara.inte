@@ -1,14 +1,25 @@
 <template>
-  <div class="flex justify-center my-8 py-16">
-    <div class="flex flex-col">
-      <label class="input-label text-base mb-2">{{ title }}</label>
-      <p class="input-label text-base mb-2 text-red-600">{{ status }}</p>
-      <input-modal v-model="answer" :placeholder="placeholder" :loading="loading" @submit="submit" />
+  <div>
+    <div class="flex justify-center my-8 py-16">
+      <div class="flex flex-col">
+        <label class="input-label text-base mb-2">{{ title }}</label>
+        <p class="input-label text-base mb-2 text-red-600">{{ status }}</p>
+        <input-modal v-model="answer" :loading="loading" :placeholder="placeholder" @submit="submit"/>
+      </div>
+    </div>
+    <div class="flex justify-center mt-5">
+      <button
+          @click="cancel"
+          class="bg-white-500 shadow-md text-sm text-black font-bold py-3 md:px-8 px-4 hover:bg-slate-100 rounded mr-3"
+      >
+        取消
+      </button>
     </div>
   </div>
 </template>
 
 <script>
+import { redirect } from "@/utils";
 import InputModal from "@/components/InputModal";
 
 export default {
@@ -45,6 +56,13 @@ export default {
     }
   },
   methods: {
+    cancel() {
+      if (this.$router.history.length) {
+        this.$router.back();
+      } else {
+        this.$router.replace('/')
+      }
+    },
     submit() {
       this.status = '';
       if (!this.answer) {
@@ -94,7 +112,7 @@ export default {
             if (xhr?.data?.token) {
               this.status = '註冊成功，憑證登錄中...';
               localStorage.setItem('unified_token', xhr.data.token);
-              setTimeout(() => location.replace('https://web-tech-tw.github.io'), 500);
+              redirect();
             } else {
               this.loading = false;
               this.status = '發生錯誤 (無錯誤代碼)';
