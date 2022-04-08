@@ -36,20 +36,21 @@ const router = new VueRouter({
 
 router.beforeEach((to, from, next) => {
   if (localStorage.getItem('unified_token')) {
-    if (location.query) {
-      const params = new URLSearchParams(location.query)
+    if (location.search) {
+      const params = new URLSearchParams(location.search);
       if (params.has('refer')) {
-        replaceToLocationSafe(params.get('refer'))
+        replaceToLocationSafe(params.get('refer'));
+        return;
       }
     }
     if (to.name !== 'manage' && to.name !== 'manage-email') {
       next({name: 'manage'});
     }
   } else {
-    if (location.query) {
-      const params = new URLSearchParams(location.query)
+    if (location.search) {
+      const params = new URLSearchParams(location.search);
       if (params.has('refer')) {
-        sessionStorage.setItem('sara_refer', params.get('refer'))
+        sessionStorage.setItem('sara_refer', params.get('refer'));
       }
     }
     if (to.name === 'manage') {
