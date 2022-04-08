@@ -27,6 +27,11 @@ const routes = [
     name: 'register',
     component: () => import('../views/RegisterView.vue'),
     props: true
+  },
+  {
+    path: '*',
+    name: 'not-found',
+    component: () => import('../views/NotFoundView.vue'),
   }
 ];
 
