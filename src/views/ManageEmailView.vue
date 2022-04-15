@@ -46,7 +46,7 @@ export default {
       }
     },
     authOptions() {
-      return {headers: {Authorization: localStorage.getItem('unified_token')}}
+      return {headers: {Authorization: localStorage.getItem(process.env.VUE_APP_SARA_TOKEN_NAME)}}
     }
   },
   methods: {
@@ -95,7 +95,7 @@ export default {
           .then((xhr) => {
             if (xhr?.data?.token) {
               this.status = '修改成功，正在更新憑證...';
-              localStorage.setItem('unified_token', xhr.data.token);
+              localStorage.setItem(process.env.VUE_APP_SARA_TOKEN_NAME, xhr.data.token);
               setTimeout(() => this.$router.replace('/manage'), 500);
             } else {
               this.status = '發生錯誤 (無錯誤代碼)';

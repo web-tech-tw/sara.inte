@@ -96,7 +96,7 @@ export default {
           name: "回首頁",
           type: "function",
           icon: require("@/assets/images/icons/home.svg"),
-          action: () => location.assign("https://web-tech-tw.github.io")
+          action: () => location.assign(process.env.VUE_APP_WEBSITE_URL)
         }
       ]
     },

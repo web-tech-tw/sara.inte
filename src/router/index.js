@@ -6,63 +6,63 @@ import {replaceToLocationSafe} from "@/utils";
 Vue.use(VueRouter);
 
 const routes = [
-  {
-    path: '/',
-    name: 'home',
-    component: HomeView
-  },
-  {
-    path: '/manage',
-    name: 'manage',
-    component: () => import('../views/ManageView.vue')
-  },
-  {
-    path: '/manage/email',
-    name: 'manage-email',
-    component: () => import('../views/ManageEmailView.vue'),
-    props: true
-  },
-  {
-    path: '/register',
-    name: 'register',
-    component: () => import('../views/RegisterView.vue'),
-    props: true
-  },
-  {
-    path: '*',
-    name: 'not-found',
-    component: () => import('../views/NotFoundView.vue'),
-  }
+    {
+        path: '/',
+        name: 'home',
+        component: HomeView
+    },
+    {
+        path: '/manage',
+        name: 'manage',
+        component: () => import('../views/ManageView.vue')
+    },
+    {
+        path: '/manage/email',
+        name: 'manage-email',
+        component: () => import('../views/ManageEmailView.vue'),
+        props: true
+    },
+    {
+        path: '/register',
+        name: 'register',
+        component: () => import('../views/RegisterView.vue'),
+        props: true
+    },
+    {
+        path: '*',
+        name: 'not-found',
+        component: () => import('../views/NotFoundView.vue'),
+    }
 ];
 
 const router = new VueRouter({
-  routes
+    routes
 });
 
 router.beforeEach((to, from, next) => {
-  if (localStorage.getItem('unified_token')) {
-    if (location.search) {
-      const params = new URLSearchParams(location.search);
-      if (params.has('refer')) {
-        replaceToLocationSafe(params.get('refer'));
-        return;
-      }
+    if (localStorage.getItem(process.env.VUE_APP_SARA_TOKEN_NAME)) {
+        if (location.search) {
+            const params = new URLSearchParams(location.search);
+            if (params.has('refer')) {
+                replaceToLocationSafe(params.get('refer'));
+                return;
+            }
+        }
+        if (to.name !== 'manage' && to.name !== 'manage-email') {
+            next({name: 'manage'});
+        }
+    } else {
+        if (location.search) {
+            const params = new URLSearchParams(location.search);
+            if (params.has('refer')) {
+                sessionStorage.setItem('sara_refer', params.get('refer'));
+            }
+        }
+        if (to.name === 'manage') {
+            next({name: 'home'});
+        }
     }
-    if (to.name !== 'manage' && to.name !== 'manage-email') {
-      next({name: 'manage'});
-    }
-  } else {
-    if (location.search) {
-      const params = new URLSearchParams(location.search);
-      if (params.has('refer')) {
-        sessionStorage.setItem('sara_refer', params.get('refer'));
-      }
-    }
-    if (to.name === 'manage') {
-      next({name: 'home'});
-    }
-  }
-  next();
+    next();
 });
 
 export default router;

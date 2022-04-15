@@ -1,9 +1,9 @@
 function isSafeRedirectUrl(url) {
-    return url.startsWith('https://web-tech-tw.github.io/')
+    return url.startsWith(process.env.VUE_APP_WEBSITE_URL)
 }
 
 function replaceToLocationSafe(url) {
-    location.replace(url && isSafeRedirectUrl(url) ? url : 'https://web-tech-tw.github.io')
+    location.replace(url && isSafeRedirectUrl(url) ? url : process.env.VUE_APP_WEBSITE_URL)
 }
 
 function redirect() {
@@ -12,4 +12,4 @@ function redirect() {
     sessionStorage.removeItem('sara_refer');
 }
 
-export { isSafeRedirectUrl, replaceToLocationSafe, redirect };
+export {isSafeRedirectUrl, replaceToLocationSafe, redirect};

@@ -76,7 +76,7 @@ export default {
   }),
   computed: {
     profile() {
-      const token = localStorage.getItem('unified_token');
+      const token = localStorage.getItem(process.env.VUE_APP_SARA_TOKEN_NAME);
       if (!token) {
         return false;
       }
@@ -84,7 +84,7 @@ export default {
       return profile?.user || null;
     },
     authOptions() {
-      return {headers: {Authorization: localStorage.getItem('unified_token')}}
+      return {headers: {Authorization: localStorage.getItem(process.env.VUE_APP_SARA_TOKEN_NAME)}}
     }
   },
   methods: {
@@ -95,7 +95,7 @@ export default {
           .then((xhr) => {
             if (xhr?.data?.token) {
               this.status = '修改成功，正在更新憑證...';
-              localStorage.setItem('unified_token', xhr.data.token);
+              localStorage.setItem(process.env.VUE_APP_SARA_TOKEN_NAME, xhr.data.token);
               setTimeout(() => location.reload(), 500);
             } else {
               this.status = '發生錯誤 (無錯誤代碼)';
@@ -107,7 +107,7 @@ export default {
     },
     logout() {
       localStorage.clear();
-      location.assign('https://web-tech-tw.github.io')
+      location.assign(process.env.VUE_APP_WEBSITE_URL)
     }
   },
   mounted() {

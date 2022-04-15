@@ -9,7 +9,7 @@ import axios from "axios";
 // axios.defaults.headers.post['Content-Type'] = 'application/x-www-form-urlencoded';
 
 const config = {
-    baseURL: process.env.baseURL || process.env.apiUrl || "https://web-tech-tw.eu.org/sara.recv",
+    baseURL: process.env.VUE_APP_SARA_RECV_HOST || '',
     timeout: 60 * 1000,
 };
 

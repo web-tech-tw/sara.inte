@@ -19,7 +19,7 @@
 </template>
 
 <script>
-import { redirect } from "@/utils";
+import {redirect} from "@/utils";
 import InputModal from "@/components/InputModal";
 
 export default {
@@ -111,7 +111,7 @@ export default {
           .then((xhr) => {
             if (xhr?.data?.token) {
               this.status = '註冊成功，憑證登錄中...';
-              localStorage.setItem('unified_token', xhr.data.token);
+              localStorage.setItem(process.env.VUE_APP_SARA_TOKEN_NAME, xhr.data.token);
               redirect();
             } else {
               this.loading = false;
