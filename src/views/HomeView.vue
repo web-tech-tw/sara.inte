@@ -4,6 +4,7 @@
       <label class="input-label text-base mb-2">{{ title }}</label>
       <p class="input-label text-base mb-2 text-red-600">{{ status }}</p>
       <input-modal v-model="answer" :loading="loading" :placeholder="placeholder" @submit="submit"/>
+      <p class="text-base mt-2">請於您的電子郵件信箱收取登入代碼。</p>
     </div>
   </div>
 </template>

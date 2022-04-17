@@ -1,10 +1,13 @@
 <template>
-  <div>
+  <div>ㄔ
     <div class="flex justify-center my-8 py-16">
       <div class="flex flex-col">
         <label class="input-label text-base mb-2">{{ title }}</label>
         <p class="input-label text-base mb-2 text-red-600">{{ status }}</p>
         <input-modal v-model="answer" :loading="loading" :placeholder="placeholder" @submit="submit"/>
+        <p class="text-base mt-2">
+          請於您的電子郵件信箱收取註冊代碼，往後操作各項涉及安全性的事務，皆亦需要於信箱收取驗證代號。
+        </p>
       </div>
     </div>
     <div class="flex justify-center mt-5">
