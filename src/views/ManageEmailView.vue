@@ -47,7 +47,7 @@ export default {
       }
     },
     authOptions() {
-      return {headers: {Authorization: localStorage.getItem(process.env.VUE_APP_SARA_TOKEN_NAME)}}
+      return {headers: {Authorization: `SARA ${localStorage.getItem(process.env.VUE_APP_SARA_TOKEN_NAME)}`}}
     }
   },
   methods: {
