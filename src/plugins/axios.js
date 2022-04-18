@@ -17,7 +17,10 @@ const _axios = axios.create(config);
 
 _axios.interceptors.request.use(
     function (config) {
-        // Do something before request is sent
+        const token = localStorage.getItem(process.env.VUE_APP_SARA_TOKEN_NAME);
+        if (token) {
+            config.headers["authorization"] = `SARA ${token}`;
+        }
         return config;
     },
     function (error) {
@@ -29,7 +32,12 @@ _axios.interceptors.request.use(
 // Add a response interceptor
 _axios.interceptors.response.use(
     function (response) {
-        // Do something with response data
+        if ("sara-issue" in response?.headers) {
+            localStorage.setItem(
+                process.env.VUE_APP_SARA_TOKEN_NAME,
+                response.headers["sara-issue"]
+            );
+        }
         return response;
     },
     function (error) {

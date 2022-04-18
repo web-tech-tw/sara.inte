@@ -83,14 +83,9 @@ export default {
       form.set('next_token', this.token);
       this.loading = true;
       this.$axios.post('/login/verify', form)
-          .then((xhr) => {
-            if (xhr?.data?.token) {
-              this.status = '登入成功，憑證登錄中...';
-              localStorage.setItem(process.env.VUE_APP_SARA_TOKEN_NAME, xhr.data.token);
-              redirect();
-            } else {
-              this.status = '發生錯誤 (無錯誤代碼)';
-            }
+          .then(() => {
+            this.status = '登入成功，憑證登錄中...';
+            redirect();
           })
           .catch((error) => {
             this.status = `發生錯誤 (${error?.response?.status || '無錯誤代碼'})`;

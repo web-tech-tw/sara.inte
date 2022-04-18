@@ -1,5 +1,5 @@
 <template>
-  <div>ㄔ
+  <div>
     <div class="flex justify-center my-8 py-16">
       <div class="flex flex-col">
         <label class="input-label text-base mb-2">{{ title }}</label>
@@ -111,15 +111,9 @@ export default {
       form.set('register_token', this.token);
       this.loading = true;
       this.$axios.post('/register/verify', form)
-          .then((xhr) => {
-            if (xhr?.data?.token) {
-              this.status = '註冊成功，憑證登錄中...';
-              localStorage.setItem(process.env.VUE_APP_SARA_TOKEN_NAME, xhr.data.token);
-              redirect();
-            } else {
-              this.loading = false;
-              this.status = '發生錯誤 (無錯誤代碼)';
-            }
+          .then(() => {
+            this.status = '修改成功，正在更新憑證...';
+            redirect();
           })
           .catch((error) => {
             this.loading = false;

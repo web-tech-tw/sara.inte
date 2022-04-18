@@ -92,14 +92,9 @@ export default {
       const form = new URLSearchParams();
       form.set('nickname', this.field.nickname);
       this.$axios.put('/profile', form, this.authOptions)
-          .then((xhr) => {
-            if (xhr?.data?.token) {
-              this.status = '修改成功，正在更新憑證...';
-              localStorage.setItem(process.env.VUE_APP_SARA_TOKEN_NAME, xhr.data.token);
-              setTimeout(() => location.reload(), 500);
-            } else {
-              this.status = '發生錯誤 (無錯誤代碼)';
-            }
+          .then(() => {
+            this.status = '修改成功，正在更新憑證...';
+            setTimeout(() => location.reload(), 500);
           })
           .catch((error) => {
             this.status = `發生錯誤 (${error?.response?.status || '無錯誤代碼'})`;
