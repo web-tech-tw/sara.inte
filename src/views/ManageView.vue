@@ -64,25 +64,16 @@
 </template>
 
 <script>
-import jwtDecode from 'jwt-decode';
-
 export default {
   name: 'ManageView',
   data: () => ({
     edit: false,
     field: {
       nickname: ''
-    }
+    },
+    profile: null
   }),
   computed: {
-    profile() {
-      const token = localStorage.getItem(process.env.VUE_APP_SARA_TOKEN_NAME);
-      if (!token) {
-        return false;
-      }
-      const profile = jwtDecode(token);
-      return profile?.user || null;
-    },
     authOptions() {
       return {headers: {Authorization: `SARA ${localStorage.getItem(process.env.VUE_APP_SARA_TOKEN_NAME)}`}}
     }
@@ -105,8 +96,9 @@ export default {
       location.assign(process.env.VUE_APP_WEBSITE_URL)
     }
   },
-  mounted() {
+  async created() {
+    this.profile = await this.$profile();
     this.field.nickname = this.profile.nickname;
-  }
+  },
 }
 </script>
