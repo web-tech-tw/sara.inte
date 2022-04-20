@@ -15,6 +15,7 @@ const extension = {
             } catch (e) {
                 if (e?.response?.status === 401) {
                     localStorage.removeItem(process.env.VUE_APP_SARA_TOKEN_NAME);
+                    location.reload();
                 }
             }
         }
