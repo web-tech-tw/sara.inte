@@ -1,6 +1,6 @@
 <template>
   <div class="flex justify-center my-8 py-16">
-    <div class="flex flex-col mx-5 md:mx-auto">
+    <div class="flex flex-col mx-5 md:mx-auto" v-if="profile">
       <div class="max-w-2xl mx-auto sm:px-6 lg:px-8">
         <div v-if="!edit" class="overflow-hidden shadow-md">
           <div class="px-6 py-4 bg-white border-b border-gray-200 font-bold">
@@ -60,6 +60,7 @@
         </div>
       </div>
     </div>
+    <div v-else>{{ profile === null ? "載入中..." : "發生錯誤" }}</div>
   </div>
 </template>
 
