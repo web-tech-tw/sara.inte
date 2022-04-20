@@ -73,11 +73,6 @@ export default {
     },
     profile: null
   }),
-  computed: {
-    authOptions() {
-      return {headers: {Authorization: `SARA ${localStorage.getItem(process.env.VUE_APP_SARA_TOKEN_NAME)}`}}
-    }
-  },
   methods: {
     update() {
       const form = new URLSearchParams();
