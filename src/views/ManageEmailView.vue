@@ -71,7 +71,7 @@ export default {
       const form = new URLSearchParams();
       form.set('email', this.answer);
       this.loading = true;
-      this.$axios.put('/profile/email', form, this.authOptions)
+      this.$axios.put('/profile/email', form)
           .then((xhr) => {
             if (xhr?.data?.update_email_token) {
               this.token = xhr.data.update_email_token;
@@ -89,7 +89,7 @@ export default {
       form.set('code', this.answer);
       form.set('update_email_token', this.token);
       this.loading = true;
-      this.$axios.post('/profile/email/verify', form, this.authOptions)
+      this.$axios.post('/profile/email/verify', form)
           .then(() => {
             this.status = '修改成功，正在更新憑證...';
             setTimeout(() => this.$router.replace('/manage'), 500);

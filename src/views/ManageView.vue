@@ -77,7 +77,7 @@ export default {
     update() {
       const form = new URLSearchParams();
       form.set('nickname', this.field.nickname);
-      this.$axios.put('/profile', form, this.authOptions)
+      this.$axios.put('/profile', form)
           .then(() => {
             this.status = '修改成功，正在更新憑證...';
             setTimeout(() => location.reload(), 500);
