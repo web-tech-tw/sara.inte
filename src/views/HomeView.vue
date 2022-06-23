@@ -55,42 +55,42 @@ export default {
       const form = new URLSearchParams();
       form.set('email', this.answer);
       this.loading = true;
-      this.$axios.post('/login', form)
-          .then((xhr) => {
-            if (xhr?.data?.next_token) {
-              this.token = xhr.data.next_token;
-            } else {
-              this.status = '發生錯誤 (無錯誤代碼)';
+      try {
+        const xhr = this.$axios.post('/login', form)
+        if (xhr?.data?.next_token) {
+          this.token = xhr.data.next_token;
+        } else {
+          this.status = '發生錯誤 (無錯誤代碼)';
+        }
+      } catch (e) {
+        if (e?.response?.status === 404) {
+          this.$router.push({
+            name: 'register',
+            params: {
+              email: this.answer
             }
-          })
-          .catch((error) => {
-            if (error?.response?.status === 404) {
-              this.$router.push({
-                name: 'register',
-                params: {
-                  email: this.answer
-                }
-              });
-            } else {
-              this.status = `發生錯誤 (${error?.response?.status || '無錯誤代碼'})`;
-            }
-          })
-          .finally(() => this.loading = false);
+          });
+        } else {
+          this.status = `發生錯誤 (${e?.response?.status || '無錯誤代碼'})`;
+        }
+      } finally {
+        this.loading = false;
+      }
     },
-    verify() {
+    async verify() {
       const form = new URLSearchParams();
       form.set('code', this.answer);
       form.set('next_token', this.token);
       this.loading = true;
-      this.$axios.post('/login/verify', form)
-          .then(() => {
-            this.status = '登入成功，憑證登錄中...';
-            redirect();
-          })
-          .catch((error) => {
-            this.status = `發生錯誤 (${error?.response?.status || '無錯誤代碼'})`;
-          })
-          .finally(() => this.loading = false);
+      try {
+        await this.$axios.post('/login/verify', form)
+        this.status = '登入成功，正在寫入憑證...';
+        redirect();
+      } catch (e) {
+        this.status = `發生錯誤 (${e?.response?.status || '無錯誤代碼'})`;
+      } finally {
+        this.loading = false
+      }
     },
   }
 }

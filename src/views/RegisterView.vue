@@ -78,48 +78,43 @@ export default {
         this.verify()
       }
     },
-    do() {
+    async do() {
       const form = new URLSearchParams();
       form.set('email', this.email);
       form.set('nickname', this.answer);
       this.loading = true;
-      this.$axios.post('/register', form)
-          .then((xhr) => {
-            if (xhr?.data?.register_token) {
-              this.mode = 3;
-              this.loading = false;
-              this.token = xhr.data.register_token;
-            } else {
-              this.loading = false;
-              this.status = '發生錯誤 (無錯誤代碼)';
-            }
-          })
-          .catch((error) => {
-            if (error?.response?.status === 410) {
-              this.mode = 1;
-              this.loading = false;
-            } else {
-              this.loading = false;
-              this.status = `發生錯誤 (${error?.response?.status || '無錯誤代碼'})`;
-            }
-          })
-          .finally(() => this.loading = false);
+      try {
+        const xhr = await this.$axios.post('/register', form);
+        if (xhr?.data?.register_token) {
+          this.mode = 3;
+          this.token = xhr.data.register_token;
+        } else {
+          this.status = '發生錯誤 (無錯誤代碼)';
+        }
+      } catch (e) {
+        if (e?.response?.status === 410) {
+          this.mode = 1;
+        } else {
+          this.status = `發生錯誤 (${e?.response?.status || '無錯誤代碼'})`;
+        }
+      } finally {
+        this.loading = false;
+      }
     },
     verify() {
       const form = new URLSearchParams();
       form.set('code', this.answer);
       form.set('register_token', this.token);
       this.loading = true;
-      this.$axios.post('/register/verify', form)
-          .then(() => {
-            this.status = '修改成功，正在更新憑證...';
-            redirect();
-          })
-          .catch((error) => {
-            this.loading = false;
-            this.status = `發生錯誤 (${error?.response?.status || '無錯誤代碼'})`;
-          })
-          .finally(() => this.loading = false);
+      try {
+        this.$axios.post('/register/verify', form)
+        this.status = '註冊成功，正在寫入憑證...';
+        redirect();
+      } catch (e) {
+        this.status = `發生錯誤 (${e?.response?.status || '無錯誤代碼'})`;
+      } finally {
+        this.loading = false;
+      }
     },
   },
   created() {

@@ -1,6 +1,6 @@
 <template>
   <div class="flex justify-center my-8 py-16">
-    <div class="flex flex-col mx-5 md:mx-auto" v-if="profile">
+    <div v-if="profile" class="flex flex-col mx-5 md:mx-auto">
       <div class="max-w-2xl mx-auto sm:px-6 lg:px-8">
         <div v-if="!edit" class="overflow-hidden shadow-md">
           <div class="px-6 py-4 bg-white border-b border-gray-200 font-bold">
@@ -21,7 +21,7 @@
                 @click="logout">登出
             </button>
           </div>
-          <div class="p-6 bg-white border-b border-gray-200" v-if="profile.roles">
+          <div v-if="showRoles" class="p-6 bg-white border-b border-gray-200">
             <span class="text-gray-600">持有權限：</span>
             <ul class="list-disc ml-7">
               <li v-for="(i, j) in profile.roles" :key="j">
@@ -53,8 +53,8 @@
           </div>
           <div class="p-6 bg-white border-gray-200 text-right">
             <button
-                @click="edit = false"
                 class="bg-white-500 shadow-md text-sm text-black font-bold py-3 md:px-8 px-4 hover:bg-slate-100 rounded mr-3"
+                @click="edit = false"
             >
               取消
             </button>
@@ -82,18 +82,23 @@ export default {
     },
     profile: null
   }),
+  computed: {
+    showRoles() {
+      return Array.isArray(this.profile.roles) &&
+          this.profile.roles.length
+    }
+  },
   methods: {
     update() {
       const form = new URLSearchParams();
       form.set('nickname', this.field.nickname);
-      this.$axios.put('/profile', form)
-          .then(() => {
-            this.status = '修改成功，正在更新憑證...';
-            setTimeout(() => location.reload(), 500);
-          })
-          .catch((error) => {
-            this.status = `發生錯誤 (${error?.response?.status || '無錯誤代碼'})`;
-          });
+      try {
+        this.$axios.put('/profile', form)
+        this.status = '修改成功，正在寫入憑證...';
+        setTimeout(() => location.reload(), 500);
+      } catch (e) {
+        this.status = `發生錯誤 (${e?.response?.status || '無錯誤代碼'})`;
+      }
     },
     logout() {
       localStorage.clear();

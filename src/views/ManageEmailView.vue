@@ -10,8 +10,8 @@
     </div>
     <div class="flex justify-center mt-5">
       <button
-          @click="cancel"
           class="bg-white-500 shadow-md text-sm text-black font-bold py-3 md:px-8 px-4 hover:bg-slate-100 rounded mr-3"
+          @click="cancel"
       >
         取消
       </button>
@@ -67,37 +67,37 @@ export default {
         this.verify()
       }
     },
-    do() {
+    async do() {
       const form = new URLSearchParams();
       form.set('email', this.answer);
       this.loading = true;
-      this.$axios.put('/profile/email', form)
-          .then((xhr) => {
-            if (xhr?.data?.update_email_token) {
-              this.token = xhr.data.update_email_token;
-            } else {
-              this.status = '發生錯誤 (無錯誤代碼)';
-            }
-          })
-          .catch((error) => {
-            this.status = `發生錯誤 (${error?.response?.status || '無錯誤代碼'})`;
-          })
-          .finally(() => this.loading = false);
+      try {
+        const xhr = await this.$axios.put('/profile/email', form)
+        if (xhr?.data?.update_email_token) {
+          this.token = xhr.data.update_email_token;
+        } else {
+          this.status = '發生錯誤 (無錯誤代碼)';
+        }
+      } catch (e) {
+        this.status = `發生錯誤 (${e?.response?.status || '無錯誤代碼'})`;
+      } finally {
+        this.loading = false
+      }
     },
-    verify() {
+    async verify() {
       const form = new URLSearchParams();
       form.set('code', this.answer);
       form.set('update_email_token', this.token);
       this.loading = true;
-      this.$axios.post('/profile/email/verify', form)
-          .then(() => {
-            this.status = '修改成功，正在更新憑證...';
-            setTimeout(() => this.$router.replace('/manage'), 500);
-          })
-          .catch((error) => {
-            this.status = `發生錯誤 (${error?.response?.status || '無錯誤代碼'})`;
-          })
-          .finally(() => this.loading = false);
+      try {
+        await this.$axios.post('/profile/email/verify', form);
+        this.status = '修改成功，正在寫入憑證...';
+        setTimeout(() => this.$router.replace('/manage'), 500);
+      } catch (e) {
+        this.status = `發生錯誤 (${e?.response?.status || '無錯誤代碼'})`;
+      } finally {
+        this.loading = false
+      }
     },
   }
 }
