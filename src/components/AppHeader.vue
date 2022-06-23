@@ -192,9 +192,7 @@ export default {
       long: "Sara"
     },
     menu_collapse: {
-      mobile_menu: false,
-      template: false,
-      online_service: false
+      mobile_menu: false
     },
     profile: null
   }),
