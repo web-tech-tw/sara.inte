@@ -16,6 +16,10 @@ _client.interceptors.request.use(
         if (token) {
             config.headers["Authorization"] = `SARA ${token}`;
         }
+        const code = localStorage.getItem(process.env.VUE_APP_SARA_SECRET_NAME);
+        if (token && code) {
+            config.headers["Sara-Secret"] = code.toString();
+        }
         return config;
     },
     function (error) {
@@ -32,10 +36,10 @@ _client.interceptors.response.use(
                 response.headers["sara-issue"]
             );
         }
-        if ("secret" in response?.data) {
+        if ("sara-code" in response?.headers) {
             localStorage.setItem(
                 process.env.VUE_APP_SARA_SECRET_NAME,
-                response.data.secret
+                response.headers["sara-code"]
             );
         }
         return response;
