@@ -21,6 +21,10 @@ _axios.interceptors.request.use(
         if (token) {
             config.headers["Authorization"] = `SARA ${token}`;
         }
+        const code = localStorage.getItem(process.env.VUE_APP_SARA_SECRET_NAME);
+        if (token && code) {
+            config.headers["Sara-Secret"] = code.toString();
+        }
         return config;
     },
     function (error) {
@@ -36,6 +40,12 @@ _axios.interceptors.response.use(
             localStorage.setItem(
                 process.env.VUE_APP_SARA_TOKEN_NAME,
                 response.headers["sara-issue"]
+            );
+        }
+        if ("sara-code" in response?.headers) {
+            localStorage.setItem(
+                process.env.VUE_APP_SARA_SECRET_NAME,
+                response.headers["sara-code"]
             );
         }
         return response;
