@@ -101,13 +101,13 @@ export default {
         this.loading = false;
       }
     },
-    verify() {
+    async verify() {
       const form = new URLSearchParams();
       form.set('code', this.answer);
       form.set('register_token', this.token);
       this.loading = true;
       try {
-        this.$axios.post('/register/verify', form)
+        await this.$axios.post('/register/verify', form)
         this.status = '註冊成功，正在寫入憑證...';
         redirect();
       } catch (e) {

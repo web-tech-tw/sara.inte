@@ -32,6 +32,12 @@ _client.interceptors.response.use(
                 response.headers["sara-issue"]
             );
         }
+        if ("secret" in response?.data) {
+            localStorage.setItem(
+                process.env.VUE_APP_SARA_SECRET_NAME,
+                response.data.secret
+            );
+        }
         return response;
     },
     function (error) {
