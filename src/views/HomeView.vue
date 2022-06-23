@@ -51,12 +51,12 @@ export default {
         this.verify()
       }
     },
-    do() {
+    async do() {
       const form = new URLSearchParams();
       form.set('email', this.answer);
       this.loading = true;
       try {
-        const xhr = this.$axios.post('/login', form)
+        const xhr = await this.$axios.post('/login', form)
         if (xhr?.data?.next_token) {
           this.token = xhr.data.next_token;
         } else {
