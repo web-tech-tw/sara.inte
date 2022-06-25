@@ -1,7 +1,16 @@
 import Vue from 'vue';
 import VueRouter from 'vue-router';
 import HomeView from '../views/HomeView.vue';
-import {replaceToLocationSafe} from "@/utils";
+
+import {
+    SARA_TOKEN_KEY_NAME,
+    SARA_REFER_KEY_NAME,
+} from "@/const"
+
+import {
+    saraReferTrigger,
+    goToLocationSafe,
+} from "@/utils";
 
 Vue.use(VueRouter);
 
@@ -39,27 +48,20 @@ const router = new VueRouter({
     routes
 });
 
-router.beforeEach((to, from, next) => {
-    if (localStorage.getItem(process.env.VUE_APP_SARA_TOKEN_NAME)) {
-        if (location.search) {
-            const params = new URLSearchParams(location.search);
-            if (params.has('refer')) {
-                replaceToLocationSafe(params.get('refer'));
-                return;
-            }
-        }
+router.beforeEach((to, _, next) => {
+    if (localStorage.getItem(SARA_TOKEN_KEY_NAME)) {
+        saraReferTrigger((url) => {
+            goToLocationSafe(url);
+        });
         if (to.name !== 'manage' && to.name !== 'manage-email') {
-            next({name: 'manage'});
+            next({ name: 'manage' });
         }
     } else {
-        if (location.search) {
-            const params = new URLSearchParams(location.search);
-            if (params.has('refer')) {
-                sessionStorage.setItem('sara_refer', params.get('refer'));
-            }
-        }
+        saraReferTrigger(() => {
+            localStorage.setItem(SARA_REFER_KEY_NAME, url);
+        });
         if (to.name === 'manage') {
-            next({name: 'home'});
+            next({ name: 'home' });
         }
     }
     next();

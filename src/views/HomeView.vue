@@ -3,75 +3,80 @@
     <div class="flex flex-col">
       <label class="input-label text-base mb-2">{{ title }}</label>
       <p class="input-label text-base mb-2 text-red-600">{{ status }}</p>
-      <input-modal v-model="answer" :loading="loading" :placeholder="placeholder" @submit="submit"/>
+      <input-modal
+        v-model="answer"
+        :loading="loading"
+        :placeholder="placeholder"
+        @submit="submit"
+      />
       <p class="text-base mt-2">請於您的電子郵件信箱收取登入代碼。</p>
     </div>
   </div>
 </template>
 
 <script>
-import {redirect} from "@/utils";
+import { exitApplication } from "@/utils";
 import InputModal from "@/components/InputModal";
 
 export default {
-  name: 'HomeView',
-  components: {InputModal},
+  name: "HomeView",
+  components: { InputModal },
   data: () => ({
-    status: '',
-    token: '',
-    answer: '',
-    loading: false
+    status: "",
+    token: "",
+    answer: "",
+    loading: false,
   }),
   computed: {
     title() {
       if (!this.token) {
-        return '請輸入您的電子郵件地址：';
+        return "請輸入您的電子郵件地址：";
       } else {
-        return '請輸入您的登入代碼：';
+        return "請輸入您的登入代碼：";
       }
     },
     placeholder() {
       if (!this.token) {
-        return '例如：sara@web-tech-tw.github.io';
+        return "例如：sara@web-tech-tw.github.io";
       } else {
-        return '例如：123456';
+        return "例如：123456";
       }
-    }
+    },
   },
   methods: {
     submit() {
-      this.status = '';
+      this.status = "";
       if (!this.answer) {
-        this.status = '請輸入資料';
+        this.status = "請輸入資料";
         return;
       }
       if (!this.token) {
-        this.do()
+        this.do();
       } else {
-        this.verify()
+        this.verify();
       }
     },
     async do() {
       const form = new URLSearchParams();
-      form.set('email', this.answer);
+      form.set("email", this.answer);
       this.loading = true;
       try {
-        const xhr = await this.$axios.post('/login', form)
+        const xhr = await this.$axios.post("/login", form);
         if (xhr?.data?.next_token) {
           this.token = xhr.data.next_token;
         } else {
-          this.status = '發生錯誤 (無錯誤代碼)';
+          this.status = "發生錯誤 (無錯誤代碼)";
         }
       } catch (e) {
         if (e?.response?.status === 404) {
           this.$router.push({
-            name: 'register',
+            name: "register",
             params: {
-              email: this.answer
-            }
+              email: this.answer,
+            },
           });
         } else {
-          this.status = `發生錯誤 (${e?.response?.status || '無錯誤代碼'})`;
+          this.status = `發生錯誤 (${e?.response?.status || "無錯誤代碼"})`;
         }
       } finally {
         this.loading = false;
@@ -79,19 +84,19 @@ export default {
     },
     async verify() {
       const form = new URLSearchParams();
-      form.set('code', this.answer);
-      form.set('next_token', this.token);
+      form.set("code", this.answer);
+      form.set("next_token", this.token);
       this.loading = true;
       try {
-        await this.$axios.post('/login/verify', form)
-        this.status = '登入成功，正在寫入憑證...';
-        redirect();
+        await this.$axios.post("/login/verify", form);
+        this.status = "登入成功，正在寫入憑證...";
+        exitApplication();
       } catch (e) {
-        this.status = `發生錯誤 (${e?.response?.status || '無錯誤代碼'})`;
+        this.status = `發生錯誤 (${e?.response?.status || "無錯誤代碼"})`;
       } finally {
-        this.loading = false
+        this.loading = false;
       }
     },
-  }
-}
+  },
+};
 </script>
