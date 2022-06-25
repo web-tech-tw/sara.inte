@@ -57,7 +57,7 @@ router.beforeEach((to, _, next) => {
             next({ name: 'manage' });
         }
     } else {
-        saraReferTrigger(() => {
+        saraReferTrigger((url) => {
             localStorage.setItem(SARA_REFER_KEY_NAME, url);
         });
         if (to.name === 'manage') {
