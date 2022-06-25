@@ -9,7 +9,7 @@ import {
 
 import {
     saraReferTrigger,
-    goToLocationSafe,
+    goToSafeLocation,
 } from "@/utils";
 
 Vue.use(VueRouter);
@@ -51,7 +51,7 @@ const router = new VueRouter({
 router.beforeEach((to, _, next) => {
     if (localStorage.getItem(SARA_TOKEN_KEY_NAME)) {
         saraReferTrigger((url) => {
-            goToLocationSafe(url);
+            goToSafeLocation(url);
         });
         if (to.name !== 'manage' && to.name !== 'manage-email') {
             next({ name: 'manage' });
