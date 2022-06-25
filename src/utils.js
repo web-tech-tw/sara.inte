@@ -4,8 +4,8 @@ import {
 } from "./const";
 
 function saraReferTrigger(callback) {
-    if (location.search) {
-        const params = new URLSearchParams(location.search);
+    if (window.location.search) {
+        const params = new URLSearchParams(window.location.search);
         if (params.has(SARA_REFER_URL_NAME)) {
             callback(params.get(SARA_REFER_URL_NAME));
         }
@@ -13,7 +13,7 @@ function saraReferTrigger(callback) {
 }
 
 function goToLocationSafe(url, replace = true) {
-    const method = replace ? location.replace : location.assign;
+    const method = replace ? window.location.replace : window.location.assign;
     method(isSafeRedirectUrl(url) ? url : process.env.VUE_APP_WEBSITE_URL);
 }
 
