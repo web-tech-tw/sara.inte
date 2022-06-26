@@ -32,7 +32,7 @@ function isSafeRedirectUrl(url) {
 }
 
 function exitApplication() {
-    const url = sessionStorage.getItem(SARA_REFER_KEY_NAME) || "";
+    const url = sessionStorage.getItem(SARA_REFER_KEY_NAME) || process.env.VUE_APP_WEBSITE_URL;
     setTimeout(() => goToSafeLocation(url), 500);
     sessionStorage.removeItem(SARA_REFER_KEY_NAME);
 }
