@@ -14,9 +14,9 @@ function saraReferTrigger(callback) {
 
 function goToSafeLocation(url, replace = true) {
     if (!isSafeRedirectUrl(url)) {
-        console.log("Unsafe redirect url detected: " + url);
+        console.warn("Unsafe redirect url detected: " + url);
         url = process.env.VUE_APP_WEBSITE_URL;
-        console.log("Reject it");
+        console.warn("Reject it");
     }
     if (replace) {
         window.location.replace(url);
