@@ -26,7 +26,9 @@ function goToSafeLocation(url, replace = true) {
 }
 
 function isSafeRedirectUrl(url) {
-    return url.startsWith(process.env.VUE_APP_WEBSITE_URL);
+    const targetUrl = new URL(url);
+    const safeUrl = new URL(process.env.VUE_APP_WEBSITE_URL);
+    return targetUrl.host === safeUrl.host;
 }
 
 function exitApplication() {
