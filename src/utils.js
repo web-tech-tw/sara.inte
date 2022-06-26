@@ -13,6 +13,7 @@ function saraReferTrigger(callback) {
 }
 
 function goToSafeLocation(url, replace = true) {
+    console.log(1, url)
     url = isSafeRedirectUrl(url) ? url : process.env.VUE_APP_WEBSITE_URL;
     if (replace) {
         window.location.replace(url);
@@ -27,8 +28,10 @@ function isSafeRedirectUrl(url) {
 
 function exitApplication() {
     const url = sessionStorage.getItem(SARA_REFER_KEY_NAME) || "";
+    console.log(2, url)
     setTimeout(() => goToSafeLocation(url), 500);
     sessionStorage.removeItem(SARA_REFER_KEY_NAME);
+    console.log(3, url)
 }
 
 export { saraReferTrigger, goToSafeLocation, isSafeRedirectUrl, exitApplication };
