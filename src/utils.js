@@ -13,7 +13,11 @@ function saraReferTrigger(callback) {
 }
 
 function goToSafeLocation(url, replace = true) {
-    url = isSafeRedirectUrl(url) ? url : process.env.VUE_APP_WEBSITE_URL;
+    if (!isSafeRedirectUrl(url)) {
+        console.log("Unsafe redirect url detected: " + url);
+        url = process.env.VUE_APP_WEBSITE_URL;
+        console.log("Reject it");
+    }
     if (replace) {
         window.location.replace(url);
     } else {
