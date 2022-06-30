@@ -7,9 +7,9 @@
         v-model="answer"
         :loading="loading"
         :placeholder="placeholder"
+        :description="description"
         @submit="submit"
       />
-      <p class="text-base mt-2">請於您的電子郵件信箱收取登入代碼。</p>
     </div>
   </div>
 </template>
@@ -40,6 +40,13 @@ export default {
         return "例如：sara@web-tech-tw.github.io";
       } else {
         return "例如：123456";
+      }
+    },
+    description() {
+      if (!this.token) {
+        return "";
+      } else {
+        return "請於您的電子郵件信箱收取登入代碼。";
       }
     },
   },

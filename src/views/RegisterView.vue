@@ -8,11 +8,9 @@
           v-model="answer"
           :loading="loading"
           :placeholder="placeholder"
+          :description="description"
           @submit="submit"
         />
-        <p class="text-base mt-2">
-          請於您的電子郵件信箱收取註冊代碼，往後操作各項涉及安全性的事務，皆亦需要於信箱收取驗證代號。
-        </p>
       </div>
     </div>
     <div class="flex justify-center mt-5">
@@ -71,6 +69,13 @@ export default {
         return "例如：星川 サラ";
       } else {
         return "例如：1234567";
+      }
+    },
+    description() {
+      if (!this.token) {
+        return "";
+      } else {
+        return "請於您的電子郵件信箱收取註冊代碼。";
       }
     },
   },
