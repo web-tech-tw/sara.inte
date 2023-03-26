@@ -3,10 +3,10 @@
     <div class="flex justify-center my-8 py-16">
       <div class="flex flex-col">
         <label class="input-label text-base mb-2">{{ title }}</label>
-        <p class="input-label text-base mb-2 text-red-600">{{ status }}</p>
+        <p class="input-label text-base mb-2 text-red-600">{{ statusMessage }}</p>
         <input-modal
           v-model="answer"
-          :loading="loading"
+          :loading="isLoading"
           :placeholder="placeholder"
           :description="description"
           @submit="submit"
@@ -51,28 +51,28 @@ export default {
   },
   data: () => ({
     mode: 0,
-    loading: false,
-    token: "",
+    isLoading: false,
+    sessionId: "",
     answer: "",
-    status: "",
+    statusMessage: "",
   }),
   computed: {
     title() {
-      if (!this.token) {
+      if (!this.sessionId) {
         return "請輸入您的暱稱：";
       } else {
         return "請輸入您的註冊代碼：";
       }
     },
     placeholder() {
-      if (!this.token) {
+      if (!this.sessionId) {
         return "例如：星川 サラ";
       } else {
         return "例如：1234567";
       }
     },
     description() {
-      if (!this.token) {
+      if (!this.sessionId) {
         return "";
       } else {
         return "請於您的電子郵件信箱收取註冊代碼。";
@@ -88,12 +88,12 @@ export default {
       }
     },
     submit() {
-      this.status = "";
+      this.statusMessage = "";
       if (!this.answer) {
-        this.status = "請輸入資料";
+        this.statusMessage = "請輸入資料";
         return;
       }
-      if (!this.token) {
+      if (!this.sessionId) {
         this.do();
       } else {
         this.verify();
@@ -103,38 +103,38 @@ export default {
       const form = new URLSearchParams();
       form.set("email", this.email);
       form.set("nickname", this.answer);
-      this.loading = true;
+      this.isLoading = true;
       try {
         const xhr = await this.$axios.post("/register", form);
-        if (xhr?.data?.register_token) {
+        if (xhr?.data?.session_id) {
           this.mode = 3;
-          this.token = xhr.data.register_token;
+          this.sessionId = xhr.data.session_id;
         } else {
-          this.status = "發生錯誤 (無錯誤代碼)";
+          this.statusMessage = "發生錯誤 (無錯誤代碼)";
         }
       } catch (e) {
         if (e?.response?.status === 410) {
           this.mode = 1;
         } else {
-          this.status = `發生錯誤 (${e?.response?.status || "無錯誤代碼"})`;
+          this.statusMessage = `發生錯誤 (${e?.response?.status || "無錯誤代碼"})`;
         }
       } finally {
-        this.loading = false;
+        this.isLoading = false;
       }
     },
     async verify() {
       const form = new URLSearchParams();
       form.set("code", this.answer);
-      form.set("register_token", this.token);
-      this.loading = true;
+      form.set("session_id", this.sessionId);
+      this.isLoading = true;
       try {
         await this.$axios.post("/register/verify", form);
-        this.status = "註冊成功，正在寫入憑證...";
+        this.statusMessage = "註冊成功，正在寫入憑證...";
         exitApplication();
       } catch (e) {
-        this.status = `發生錯誤 (${e?.response?.status || "無錯誤代碼"})`;
+        this.statusMessage = `發生錯誤 (${e?.response?.status || "無錯誤代碼"})`;
       } finally {
-        this.loading = false;
+        this.isLoading = false;
       }
     },
   },
