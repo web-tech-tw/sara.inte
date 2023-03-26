@@ -92,7 +92,7 @@ export default {
     async verify() {
       const form = new URLSearchParams();
       form.set("code", this.answer);
-      form.set("next_sessionId", this.sessionId);
+      form.set("session_id", this.sessionId);
       this.isLoading = true;
       try {
         await this.$axios.post("/login/verify", form);
