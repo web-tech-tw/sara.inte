@@ -68,7 +68,7 @@ export default {
       form.set("email", this.answer);
       this.isLoading = true;
       try {
-        const xhr = await this.$axios.post("/login", form);
+        const xhr = await this.$axios.post("/tokens", form);
         if (xhr?.data?.session_id) {
           this.sessionId = xhr.data.session_id;
         } else {
@@ -95,7 +95,7 @@ export default {
       form.set("session_id", this.sessionId);
       this.isLoading = true;
       try {
-        await this.$axios.post("/login/verify", form);
+        await this.$axios.patch("/tokens", form);
         this.statusMessage = "登入成功，正在寫入憑證...";
         exitApplication();
       } catch (e) {

@@ -93,7 +93,7 @@ export default {
       const form = new URLSearchParams();
       form.set('nickname', this.field.nickname);
       try {
-        await this.$axios.put('/profile', form)
+        await this.$axios.put('/users/me', form)
         this.status = '修改成功，正在寫入憑證...';
         setTimeout(() => location.reload(), 500);
       } catch (e) {

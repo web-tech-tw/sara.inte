@@ -105,7 +105,7 @@ export default {
       form.set("nickname", this.answer);
       this.isLoading = true;
       try {
-        const xhr = await this.$axios.post("/register", form);
+        const xhr = await this.$axios.post("/users", form);
         if (xhr?.data?.session_id) {
           this.mode = 3;
           this.sessionId = xhr.data.session_id;
@@ -128,7 +128,7 @@ export default {
       form.set("session_id", this.sessionId);
       this.isLoading = true;
       try {
-        await this.$axios.post("/register/verify", form);
+        await this.$axios.patch("/users", form);
         this.statusMessage = "註冊成功，正在寫入憑證...";
         exitApplication();
       } catch (e) {

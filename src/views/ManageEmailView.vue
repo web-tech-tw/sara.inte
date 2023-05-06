@@ -95,7 +95,7 @@ export default {
       form.set("email", this.answer);
       this.isLoading = true;
       try {
-        const xhr = await this.$axios.put("/profile/email", form);
+        const xhr = await this.$axios.put("/users/me/email", form);
         if (xhr?.data?.session_id) {
           this.sessionId = xhr.data.session_id;
         } else {
@@ -113,7 +113,7 @@ export default {
       form.set("session_id", this.sessionId);
       this.isLoading = true;
       try {
-        await this.$axios.post("/profile/email/verify", form);
+        await this.$axios.patch("/users/me/email", form);
         this.statusMessage = "修改成功，正在寫入憑證...";
         setTimeout(() => this.$router.replace("/manage"), 500);
       } catch (e) {
