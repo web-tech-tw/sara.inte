@@ -64,11 +64,11 @@ export default {
       }
     },
     async do() {
-      const form = new URLSearchParams();
-      form.set("email", this.answer);
       this.isLoading = true;
       try {
-        const xhr = await this.$axios.post("/tokens", form);
+        const xhr = await this.$axios.post("/tokens", {
+          email: this.answer,
+        });
         if (xhr?.data?.session_id) {
           this.sessionId = xhr.data.session_id;
         } else {
@@ -90,12 +90,12 @@ export default {
       }
     },
     async verify() {
-      const form = new URLSearchParams();
-      form.set("code", this.answer);
-      form.set("session_id", this.sessionId);
       this.isLoading = true;
       try {
-        await this.$axios.patch("/tokens", form);
+        await this.$axios.patch("/tokens", {
+          code: this.answer,
+          session_id: this.sessionId,
+        });
         this.statusMessage = "登入成功，正在寫入憑證...";
         exitApplication();
       } catch (e) {
