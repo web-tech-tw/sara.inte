@@ -1,109 +1,47 @@
 <template>
-  <div class="flex justify-center my-8 py-16">
-    <div class="flex flex-col">
-      <label class="input-label text-base mb-2">{{ title }}</label>
-      <p class="input-label text-base mb-2 text-red-600">{{ statusMessage }}</p>
-      <input-modal
-        v-model="answer"
-        :loading="isLoading"
-        :placeholder="placeholder"
-        :description="description"
-        @submit="submit"
-      />
+  <div>
+    <div class="mt-10 mx-auto py-10 max-w-7xl px-4 sm:mt-12 sm:px-6 md:mt-16 lg:mt-20 lg:px-8 xl:mt-28">
+      <div class="sm:text-center lg:text-left">
+        <h1 class="text-4xl tracking-tight font-extrabold text-gray-900">
+          <span class="block xl:inline">這裡是</span>
+          <span class="block text-indigo-600 xl:inline">前端 Web 模板</span>
+        </h1>
+        <p class="mt-3 text-base text-gray-500">
+          Vite + Vue.js 3 + Tailwind CSS，為了快速發展專案而生，請自行修改內容。
+        </p>
+        <div class="mt-5 sm:mt-8 sm:flex sm:justify-center lg:justify-start">
+          <div class="mt-3 sm:mt-0 sm:ml-3">
+            <a href="https://github.com/web-tech-tw/template.inte" class="w-full flex items-center justify-center px-8 py-3 border border-transparent text-base font-medium rounded-md text-indigo-700 bg-indigo-100 hover:bg-indigo-200 md:py-4 md:text-lg md:px-10">
+              template.inte GitHub
+            </a>
+          </div>
+        </div>
+      </div>
+    </div>
+    <div class="mt-10 mx-auto py-10 max-w-7xl px-4 sm:mt-12 sm:px-6 md:mt-16 lg:mt-20 lg:px-8 xl:mt-28">
+      <div class="sm:text-center lg:text-right">
+        <h1 class="text-4xl tracking-tight font-extrabold text-gray-900">
+          <span class="block xl:inline">你是</span>
+          <span class="block text-indigo-600 xl:inline">後端</span>
+          <span class="block xl:inline">工程師嗎？</span>
+        </h1>
+        <p class="mt-3 text-base text-gray-500">
+          你走錯地方了，下方連結才是後端 API 模板。
+        </p>
+        <div class="mt-5 sm:mt-8 sm:flex sm:justify-center lg:justify-end">
+          <div class="rounded-md shadow">
+            <a href="https://github.com/web-tech-tw/template.recv" class="w-full flex items-center justify-center px-8 py-3 border border-transparent text-base font-medium rounded-md text-white bg-indigo-600 hover:bg-indigo-700 md:py-4 md:text-lg md:px-10">
+              template.recv GitHub
+            </a>
+          </div>
+        </div>
+      </div>
     </div>
   </div>
 </template>
 
 <script>
-import { exitApplication } from "@/utils";
-import InputModal from "@/components/InputModal";
-
 export default {
-  name: "HomeView",
-  components: { InputModal },
-  data: () => ({
-    isLoading: false,
-    statusMessage: "",
-    answer: "",
-    sessionId: "",
-  }),
-  computed: {
-    title() {
-      if (!this.sessionId) {
-        return "請輸入您的電子郵件地址：";
-      } else {
-        return "請輸入您的登入代碼：";
-      }
-    },
-    placeholder() {
-      if (!this.sessionId) {
-        return "例如：sara@web-tech-tw.github.io";
-      } else {
-        return "例如：123456";
-      }
-    },
-    description() {
-      if (!this.sessionId) {
-        return "";
-      } else {
-        return "請於您的電子郵件信箱收取登入代碼。";
-      }
-    },
-  },
-  methods: {
-    submit() {
-      this.statusMessage = "";
-      if (!this.answer) {
-        this.statusMessage = "請輸入資料";
-        return;
-      }
-      if (!this.sessionId) {
-        this.do();
-      } else {
-        this.verify();
-      }
-    },
-    async do() {
-      this.isLoading = true;
-      try {
-        const xhr = await this.$axios.post("/tokens", {
-          email: this.answer,
-        });
-        if (xhr?.data?.session_id) {
-          this.sessionId = xhr.data.session_id;
-        } else {
-          this.statusMessage = "發生錯誤 (無錯誤代碼)";
-        }
-      } catch (e) {
-        if (e?.response?.status === 404) {
-          this.$router.push({
-            name: "register",
-            params: {
-              email: this.answer,
-            },
-          });
-        } else {
-          this.statusMessage = `發生錯誤 (${e?.response?.status || "無錯誤代碼"})`;
-        }
-      } finally {
-        this.isLoading = false;
-      }
-    },
-    async verify() {
-      this.isLoading = true;
-      try {
-        await this.$axios.patch("/tokens", {
-          code: this.answer,
-          session_id: this.sessionId,
-        });
-        this.statusMessage = "登入成功，正在寫入憑證...";
-        exitApplication();
-      } catch (e) {
-        this.statusMessage = `發生錯誤 (${e?.response?.status || "無錯誤代碼"})`;
-      } finally {
-        this.isLoading = false;
-      }
-    },
-  },
-};
+  name: 'HomeView',
+}
 </script>

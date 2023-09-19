@@ -1,70 +1,19 @@
-import Vue from 'vue';
-import VueRouter from 'vue-router';
-import HomeView from '../views/HomeView.vue';
-
-import {
-    SARA_TOKEN_KEY_NAME,
-    SARA_REFER_KEY_NAME,
-} from "@/const"
-
-import {
-    saraReferTrigger,
-    goToSafeLocation,
-} from "@/utils";
-
-Vue.use(VueRouter);
+import { createRouter, createWebHashHistory } from "vue-router";
 
 const routes = [
-    {
-        path: '/',
-        name: 'home',
-        component: HomeView
-    },
-    {
-        path: '/manage',
-        name: 'manage',
-        component: () => import('../views/ManageView.vue')
-    },
-    {
-        path: '/manage/email',
-        name: 'manage-email',
-        component: () => import('../views/ManageEmailView.vue'),
-        props: true
-    },
-    {
-        path: '/register',
-        name: 'register',
-        component: () => import('../views/RegisterView.vue'),
-        props: true
-    },
-    {
-        path: '*',
-        name: 'not-found',
-        component: () => import('../views/NotFoundView.vue'),
-    }
+  {
+    path: "/",
+    component: () => import("../views/HomeView.vue"),
+  },
+  {
+    path: "/:pathMatch(.*)*",
+    component: () => import("../views/NotFoundView.vue"),
+  },
 ];
 
-const router = new VueRouter({
-    routes
-});
-
-router.beforeEach((to, _, next) => {
-    if (localStorage.getItem(SARA_TOKEN_KEY_NAME)) {
-        saraReferTrigger((url) => {
-            goToSafeLocation(url);
-        });
-        if (to.name !== 'manage' && to.name !== 'manage-email') {
-            next({ name: 'manage' });
-        }
-    } else {
-        saraReferTrigger((url) => {
-            sessionStorage.setItem(SARA_REFER_KEY_NAME, url);
-        });
-        if (to.name === 'manage') {
-            next({ name: 'home' });
-        }
-    }
-    next();
+const router = createRouter({
+  history: createWebHashHistory(),
+  routes,
 });
 
 export default router;
