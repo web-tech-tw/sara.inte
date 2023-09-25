@@ -18,6 +18,8 @@ jobs:
         uses: actions/checkout@v4
 
       - name: Install and Build 🛠
+        env:
+          BASE_URL: ${{ vars.BASE_URL }}
         run: |
           npm install
           npm run build
