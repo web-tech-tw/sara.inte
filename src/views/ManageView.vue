@@ -71,7 +71,7 @@ import { ref, computed, onMounted } from 'vue';
 import { useClient } from '../clients/sara.js';
 
 const {
-  VITE_SARA_INTE_HOST: websiteUrl,
+  VITE_INDEX_INTE_HOST: indexInteHost,
 } = import.meta.env;
 
 const edit = ref(false);
@@ -95,7 +95,7 @@ const update = async () => {
 
 const logout = () => {
   localStorage.clear();
-  location.assign(websiteUrl);
+  location.assign(indexInteHost);
 };
 
 onMounted(async () => {

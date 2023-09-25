@@ -1,5 +1,5 @@
 const {
-    VITE_SARA_INTE_HOST: websiteUrl,
+    VITE_INDEX_INTE_HOST: indexInteHost,
 } = import.meta.env;
 
 import {
@@ -19,7 +19,7 @@ function saraReferTrigger(callback) {
 function goToSafeLocation(url, replace = true) {
     if (!isSafeRedirectUrl(url)) {
         console.warn("Unsafe redirect url detected: " + url);
-        url = websiteUrl;
+        url = indexInteHost;
         console.warn("Reject it");
     }
     if (replace) {
@@ -31,12 +31,12 @@ function goToSafeLocation(url, replace = true) {
 
 function isSafeRedirectUrl(url) {
     const targetUrl = new URL(url);
-    const safeUrl = new URL(websiteUrl);
+    const safeUrl = new URL(indexInteHost);
     return targetUrl.host === safeUrl.host;
 }
 
 function exitApplication() {
-    const url = sessionStorage.getItem(SARA_REFER_KEY_NAME) || websiteUrl;
+    const url = sessionStorage.getItem(SARA_REFER_KEY_NAME) || indexInteHost;
     setTimeout(() => goToSafeLocation(url), 500);
     sessionStorage.removeItem(SARA_REFER_KEY_NAME);
 }
