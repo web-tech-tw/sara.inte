@@ -4,18 +4,12 @@
       <div class="flex flex-col">
         <label class="input-label text-base mb-2">{{ title }}</label>
         <p class="input-label text-base mb-2 text-red-600">{{ statusMessage }}</p>
-        <input-modal
-          v-model="answer"
-          :loading="isLoading"
-          :placeholder="placeholder"
-          :description="description"
-          @submit="submit"
-        />
+        <input-modal v-model="answer" :loading="isLoading" :placeholder="placeholder" :description="description"
+          @submit="submit" />
       </div>
     </div>
     <div class="flex justify-center mt-5">
-      <button
-        class="
+      <button class="
           bg-white-500
           shadow-md
           text-sm text-black
@@ -26,9 +20,7 @@
           hover:bg-slate-100
           rounded
           mr-3
-        "
-        @click="cancel"
-      >
+        " @click="cancel">
         取消
       </button>
     </div>
@@ -36,92 +28,81 @@
 </template>
 
 <script>
-import InputModal from "@/components/InputModal";
+import { ref } from 'vue';
+import { useRouter } from 'vue-router';
+import { useClient } from '../clients/sara.js';
 
-export default {
-  name: "ManageEmailView",
-  components: { InputModal },
-  data: () => ({
-    isLoading: false,
-    statusMessage: "",
-    sessionId: "",
-    answer: "",
-  }),
-  computed: {
-    title() {
-      if (!this.sessionId) {
-        return "請輸入新的電子郵件地址：";
-      } else {
-        return "請輸入您的轉移代碼：";
-      }
-    },
-    placeholder() {
-      if (!this.sessionId) {
-        return "例如：sara@web-tech-tw.github.io";
-      } else {
-        return "例如：12345678";
-      }
-    },
-    description() {
-      if (!this.sessionId) {
-        return "";
-      } else {
-        return "請於您的新的電子郵件信箱收取轉移代碼。";
-      }
-    },
-  },
-  methods: {
-    cancel() {
-      if (this.$router.history.length) {
-        this.$router.back();
-      } else {
-        this.$router.replace("/");
-      }
-    },
-    submit() {
-      this.statusMessage = "";
-      if (!this.answer) {
-        this.statusMessage = "請輸入資料";
-        return;
-      }
-      if (!this.sessionId) {
-        this.do();
-      } else {
-        this.verify();
-      }
-    },
-    async do() {
-      this.isLoading = true;
-      try {
-        const xhr = await this.$axios.put("/users/me/email", {
-          email: this.answer,
-        });
-        if (xhr?.data?.session_id) {
-          this.sessionId = xhr.data.session_id;
-        } else {
-          this.statusMessage = "發生錯誤 (無錯誤代碼)";
-        }
-      } catch (e) {
-        this.statusMessage = `發生錯誤 (${e?.response?.status || "無錯誤代碼"})`;
-      } finally {
-        this.isLoading = false;
-      }
-    },
-    async verify() {
-      this.isLoading = true;
-      try {
-        await this.$axios.patch("/users/me/email", {
-          code: this.answer,
-          session_id: this.sessionId,
-        });
-        this.statusMessage = "修改成功，正在寫入憑證...";
-        setTimeout(() => this.$router.replace("/manage"), 500);
-      } catch (e) {
-        this.statusMessage = `發生錯誤 (${e?.response?.status || "無錯誤代碼"})`;
-      } finally {
-        this.isLoading = false;
-      }
-    },
-  },
+const isLoading = ref(false);
+const statusMessage = ref('');
+const answer = ref('');
+const sessionId = ref('');
+const router = useRouter();
+
+const client = useClient();
+
+const title = computed(() => {
+  return !sessionId.value ? '請輸入新的電子郵件地址：' : '請輸入您的轉移代碼：';
+});
+
+const placeholder = computed(() => {
+  return !sessionId.value ? '例如：sara@web-tech-tw.github.io' : '例如：12345678';
+});
+
+const description = computed(() => {
+  return !sessionId.value ? '' : '請於您的新的電子郵件信箱收取轉移代碼。';
+});
+
+const cancel = () => {
+  if (router.history.length) {
+    router.back();
+  } else {
+    router.replace('/');
+  }
+};
+
+const submit = () => {
+  if (!answer.value) {
+    statusMessage.value = '請輸入資料';
+    return;
+  }
+
+  statusMessage.value = '';
+  isLoading.value = true;
+  if (!sessionId.value) {
+    doRequest();
+  } else {
+    verifyRequest();
+  }
+  isLoading.value = false;
+};
+
+const doRequest = async () => {
+  try {
+    const response = await client.put('users/me/email', {
+      email: answer.value,
+    });
+    const result = await response.json();
+    if (result?.session_id) {
+      sessionId.value = xhr.data.session_id;
+    } else {
+      statusMessage.value = '發生錯誤 (無錯誤代碼)';
+    }
+  } catch (e) {
+    const errorCode = e?.response?.status || '無錯誤代碼';
+    statusMessage.value = `發生錯誤 (${errorCode})`;
+  }
+};
+
+const verifyRequest = async () => {
+  try {
+    await client.patch('users/me/email', {
+      code: answer.value,
+      session_id: sessionId.value,
+    });
+    statusMessage.value = '修改成功，正在寫入憑證...';
+    setTimeout(() => router.replace('/manage'), 500);
+  } catch (e) {
+    statusMessage.value = `發生錯誤 (${e?.response?.status || '無錯誤代碼'})`;
+  }
 };
 </script>

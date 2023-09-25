@@ -11,7 +11,9 @@ import AppHeaderNormalMenuItem from "./AppHeaderNormalMenuItem.vue";
 
 import { useClient } from "../clients/sara.js";
 
-const saraInitHost = import.meta.env.VITE_SARA_INTE_HOST;
+const {
+    VITE_SARA_INTE_HOST: saraInteHost,
+} = import.meta.env;
 
 const client = useClient();
 
@@ -23,13 +25,13 @@ const nickname = computed(() => {
 })
 
 const handleClick = () => {
-    location.assign(saraInitHost);
+    location.assign(saraInteHost);
 }
 
-client.get("users/me").json().then((response) => {
-    loginState.value = response;
+client.get("users/me").json().then((result) => {
+    loginState.value = result;
 }).catch((error) => {
     loginState.value = false;
-    console.error(error);
+    console.warn(error.message);
 });
 </script>
