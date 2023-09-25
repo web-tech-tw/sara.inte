@@ -1,70 +1,62 @@
-import Vue from 'vue';
-import VueRouter from 'vue-router';
-import HomeView from '../views/HomeView.vue';
+import { createRouter, createWebHashHistory } from "vue-router";
+
+const {
+  VITE_SARA_TOKEN_NAME: tokenName,
+} = import.meta.env;
 
 import {
-    SARA_TOKEN_KEY_NAME,
-    SARA_REFER_KEY_NAME,
-} from "@/const"
+  SARA_REFER_KEY_NAME,
+} from "../const.js";
 
 import {
-    saraReferTrigger,
-    goToSafeLocation,
-} from "@/utils";
-
-Vue.use(VueRouter);
+  saraReferTrigger
+} from "../utils.js";
 
 const routes = [
-    {
-        path: '/',
-        name: 'home',
-        component: HomeView
-    },
-    {
-        path: '/manage',
-        name: 'manage',
-        component: () => import('../views/ManageView.vue')
-    },
-    {
-        path: '/manage/email',
-        name: 'manage-email',
-        component: () => import('../views/ManageEmailView.vue'),
-        props: true
-    },
-    {
-        path: '/register',
-        name: 'register',
-        component: () => import('../views/RegisterView.vue'),
-        props: true
-    },
-    {
-        path: '*',
-        name: 'not-found',
-        component: () => import('../views/NotFoundView.vue'),
-    }
+  {
+    path: "/",
+    component: () => import("../views/HomeView.vue"),
+  },
+  {
+      path: '/manage',
+      component: () => import('../views/ManageView.vue'),
+  },
+  {
+      path: '/manage/email',
+      component: () => import('../views/ManageEmailView.vue'),
+  },
+  {
+      path: '/register',
+      component: () => import('../views/RegisterView.vue'),
+  },
+  {
+    path: "/:pathMatch(.*)*",
+    component: () => import("../views/NotFoundView.vue"),
+  },
 ];
 
-const router = new VueRouter({
-    routes
+const router = createRouter({
+  history: createWebHashHistory(),
+  routes,
 });
 
 router.beforeEach((to, _, next) => {
-    if (localStorage.getItem(SARA_TOKEN_KEY_NAME)) {
-        saraReferTrigger((url) => {
-            goToSafeLocation(url);
-        });
-        if (to.name !== 'manage' && to.name !== 'manage-email') {
-            next({ name: 'manage' });
-        }
-    } else {
-        saraReferTrigger((url) => {
-            sessionStorage.setItem(SARA_REFER_KEY_NAME, url);
-        });
-        if (to.name === 'manage') {
-            next({ name: 'home' });
-        }
-    }
-    next();
+  if (localStorage.getItem(tokenName)) {
+      saraReferTrigger((url) => {
+          goToSafeLocation(url);
+      });
+      if (to.path !== '/manage' && to.path !== '/manage/email') {
+          next('/manage');
+      }
+  } else {
+      saraReferTrigger((url) => {
+          sessionStorage.setItem(SARA_REFER_KEY_NAME, url);
+      });
+      if (to.path === '/manage') {
+          next('/');
+      }
+  }
+  next();
 });
 
 export default router;

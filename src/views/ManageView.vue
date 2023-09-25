@@ -7,18 +7,18 @@
             您好，{{ profile.nickname }}，這裡是您的個人資料：
           </div>
           <div class="p-6 bg-white border-b border-gray-200">
-            <span class="text-gray-600">暱稱：</span>{{ profile.nickname }}<br/>
-            <span class="text-gray-600">電子郵件地址：</span>{{ profile.email }}<br/>
+            <span class="text-gray-600">暱稱：</span>{{ profile.nickname }}<br />
+            <span class="text-gray-600">電子郵件地址：</span>{{ profile.email }}<br />
             <span class="text-gray-600">Sara系統使用者識別碼：</span>{{ profile._id }}
           </div>
           <div class="p-6 bg-white border-b border-gray-200 text-right">
             <button
-                class="bg-sky-500 shadow-md text-sm text-white font-bold py-3 md:px-8 px-4 hover:bg-sky-600 rounded mr-3"
-                @click="edit = true">修改個人資料
+              class="bg-sky-500 shadow-md text-sm text-white font-bold py-3 md:px-8 px-4 hover:bg-sky-600 rounded mr-3"
+              @click="edit = true">修改個人資料
             </button>
             <button
-                class="bg-amber-500 shadow-md text-sm text-white font-bold py-3 md:px-8 px-4 hover:bg-amber-600 rounded"
-                @click="logout">登出
+              class="bg-amber-500 shadow-md text-sm text-white font-bold py-3 md:px-8 px-4 hover:bg-amber-600 rounded"
+              @click="logout">登出
             </button>
           </div>
           <div v-if="showRoles" class="p-6 bg-white border-b border-gray-200">
@@ -37,13 +37,9 @@
           <div class="p-6 bg-white border-b border-gray-200">
             <div class="flex rounded bg-white">
               <label class="px-4 py-1 text-gray-600" for="nickname">暱稱：</label>
-              <input
-                  id="nickname"
-                  v-model="field.nickname"
-                  class="border-none bg-transparent px-4 py-1 text-gray-900 outline-none focus:outline-none"
-                  placeholder="例如：星川 サラ"
-                  type="text"
-              >
+              <input id="nickname" v-model="field.nickname"
+                class="border-none bg-transparent px-4 py-1 text-gray-900 outline-none focus:outline-none"
+                placeholder="例如：星川 サラ" type="text">
             </div>
           </div>
           <div class="p-6 bg-white border-b border-gray-200">
@@ -53,15 +49,12 @@
           </div>
           <div class="p-6 bg-white border-gray-200 text-right">
             <button
-                class="bg-white-500 shadow-md text-sm text-black font-bold py-3 md:px-8 px-4 hover:bg-slate-100 rounded mr-3"
-                @click="edit = false"
-            >
+              class="bg-white-500 shadow-md text-sm text-black font-bold py-3 md:px-8 px-4 hover:bg-slate-100 rounded mr-3"
+              @click="edit = false">
               取消
             </button>
-            <button
-                class="bg-sky-500 shadow-md text-sm text-white font-bold py-3 md:px-8 px-4 hover:bg-sky-600 rounded"
-                @click="update"
-            >
+            <button class="bg-sky-500 shadow-md text-sm text-white font-bold py-3 md:px-8 px-4 hover:bg-sky-600 rounded"
+              @click="update">
               確定修改
             </button>
           </div>
@@ -72,42 +65,47 @@
   </div>
 </template>
 
-<script>
-export default {
-  name: 'ManageView',
-  data: () => ({
-    edit: false,
-    field: {
-      nickname: ''
-    },
-    profile: null
-  }),
-  computed: {
-    showRoles() {
-      return Array.isArray(this.profile.roles) &&
-          this.profile.roles.length
-    }
-  },
-  methods: {
-    async update() {
-      try {
-        await this.$axios.put('/users/me', {
-          nickname: this.field.nickname,
-        })
-        this.status = '修改成功，正在寫入憑證...';
-        setTimeout(() => location.reload(), 500);
-      } catch (e) {
-        this.status = `發生錯誤 (${e?.response?.status || '無錯誤代碼'})`;
-      }
-    },
-    logout() {
-      localStorage.clear();
-      location.assign(process.env.VUE_APP_WEBSITE_URL)
-    }
-  },
-  async created() {
-    this.profile = await this.$profile();
-    this.field.nickname = this.profile.nickname;
-  },
-}
+<script setup>
+import { ref, computed, onMounted } from 'vue';
+
+import { useClient } from '../clients/sara.js';
+
+const {
+  VITE_SARA_INTE_HOST: websiteUrl,
+} = import.meta.env;
+
+const edit = ref(false);
+const field = ref({
+  nickname: '',
+});
+const profile = ref(null);
+
+const client = useClient();
+
+const showRoles = computed(() => {
+  return Array.isArray(profile.value?.roles) && profile.value.roles.length;
+});
+
+const update = async () => {
+  await client.put('users/me', {
+    nickname: field.value.nickname,
+  });
+  setTimeout(() => location.reload(), 500);
+};
+
+const logout = () => {
+  localStorage.clear();
+  location.assign(websiteUrl);
+};
+
+onMounted(async () => {
+  try {
+    const response = await client.get("users/me");
+    const result = await response.json();
+    profile.value = result.profile;
+    field.value.nickname = result.nickname;
+  } catch (e) {
+    console.warn(e.message);
+  }
+});
 </script>

@@ -3,8 +3,8 @@
     <div class="flex rounded bg-white w-auto shadow-md md:w-[30rem]">
       <input
         v-model="content"
-        :disabled="loading"
-        :placeholder="placeholder"
+        :disabled="props.loading"
+        :placeholder="props.placeholder"
         class="
           w-full
           border-none
@@ -16,13 +16,12 @@
           focus:outline-none
         "
         type="text"
-        @input="input"
         @keydown.enter="submit"
       />
       <button
         class="m-2 rounded px-4 py-2 font-semibold"
         @click="submit"
-        :disabled="loading"
+        :disabled="props.loading"
       >
         <svg
           class="mt-1 h-6 w-6"
@@ -41,49 +40,35 @@
       </button>
     </div>
     <p class="text-base mt-2">
-      {{ description }}
+      {{ props.description }}
     </p>
   </div>
 </template>
 
-<script>
-export default {
-  name: "InputModal",
-  props: {
-    value: {
-      type: String,
-      required: false,
-      default: () => "",
-    },
-    placeholder: {
-      type: String,
-      require: false,
-      default: () => "",
-    },
-    loading: {
-      type: Boolean,
-      require: false,
-      default: () => false,
-    },
-    description: {
-      type: String,
-      require: false,
-      default: () => "",
-    },
+<script setup>
+import { ref, defineProps, defineEmits } from 'vue';
+
+const props = defineProps({
+  placeholder: {
+    type: String,
+    required: true,
   },
-  data() {
-    return {
-      content: this.value,
-    };
+  loading: {
+    type: Boolean,
+    required: true,
   },
-  methods: {
-    input() {
-      this.$emit("input", this.content);
-    },
-    submit() {
-      this.content = "";
-      this.$emit("submit");
-    },
+  description: {
+    type: String,
+    required: true,
   },
+});
+
+const content = ref('');
+
+const emit = defineEmits(['input', 'submit']);
+
+const submit = () => {
+  emit('submit', content.value);
+  content.value = '';
 };
 </script>
