@@ -27,9 +27,12 @@
 </template>
 
 <script>
-import { ref } from 'vue';
+import { ref, computed } from 'vue';
 import { useRouter } from 'vue-router';
+
 import { useClient } from '../clients/sara.js';
+
+import InputModal from '../components/InputModal.vue';
 
 const isLoading = ref(false);
 const statusMessage = ref('');
