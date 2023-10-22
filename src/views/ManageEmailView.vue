@@ -1,32 +1,30 @@
 <template>
-  <div class="my-8 py-16">
-    <div class="flex justify-center">
-      <div class="flex flex-col">
-        <label class="input-label text-base mb-2">{{ title }}</label>
-        <p class="input-label text-base mb-2 text-red-600">{{ statusMessage }}</p>
-        <input-modal :loading="isLoading" :placeholder="placeholder" :description="description" @submit="submit" />
-      </div>
+  <div class="flex justify-center my-8 py-16">
+    <div class="flex flex-col">
+      <label class="input-label text-base mb-2">{{ title }}</label>
+      <p class="input-label text-base mb-2 text-red-600">{{ statusMessage }}</p>
+      <input-modal :loading="isLoading" :placeholder="placeholder" :description="description" @submit="submit" />
     </div>
-    <div class="flex justify-center mt-5">
-      <button class="
-          bg-white-500
-          shadow-md
-          text-sm text-black
-          font-bold
-          py-3
-          md:px-8
-          px-4
-          hover:bg-slate-100
-          rounded
-          mr-3
-        " @click="cancel">
-        取消
-      </button>
-    </div>
+  </div>
+  <div class="flex justify-center mt-5">
+    <button class="
+        bg-white-500
+        shadow-md
+        text-sm text-black
+        font-bold
+        py-3
+        md:px-8
+        px-4
+        hover:bg-slate-100
+        rounded
+        mr-3
+      " @click="cancel">
+      取消
+    </button>
   </div>
 </template>
 
-<script>
+<script setup>
 import { ref, computed } from 'vue';
 import { useRouter } from 'vue-router';
 
