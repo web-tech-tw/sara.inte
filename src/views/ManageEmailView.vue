@@ -83,13 +83,14 @@ const doRequest = async (value) => {
     });
     const result = await response.json();
     if (result?.session_id) {
-      sessionId.value = xhr.data.session_id;
+      sessionId.value = result.session_id;
     } else {
       statusMessage.value = '發生錯誤 (無錯誤代碼)';
     }
   } catch (e) {
     const errorCode = e?.response?.status || '無錯誤代碼';
     statusMessage.value = `發生錯誤 (${errorCode})`;
+    console.error(e.message);
   }
 };
 
@@ -97,14 +98,16 @@ const verifyRequest = async (value) => {
   try {
     await client.patch('users/me/email', {
       json: {
-        code: value,
         session_id: sessionId.value,
-      },
+        code: value,
+      }
     });
     statusMessage.value = '修改成功，正在寫入憑證...';
     setTimeout(() => router.replace('/manage'), 500);
   } catch (e) {
-    statusMessage.value = `發生錯誤 (${e?.response?.status || '無錯誤代碼'})`;
+    const errorCode = e?.response?.status || '無錯誤代碼';
+    statusMessage.value = `發生錯誤 (${errorCode})`;
+    console.error(e.message);
   }
 };
 </script>
