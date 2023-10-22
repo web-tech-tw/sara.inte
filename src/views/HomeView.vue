@@ -67,6 +67,7 @@ const doRequest = async (value) => {
     }
   } catch (e) {
     if (e?.response?.status === 404) {
+      sessionStorage.setItem("sara_register_email", value);
       router.push('/register');
     } else {
       const errorCode = e?.response?.status || '無錯誤代碼';

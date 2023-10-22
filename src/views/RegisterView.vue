@@ -83,10 +83,11 @@ const submit = (value) => {
 };
 
 const doRequest = async (value) => {
+  const registerEmail = sessionStorage.getItem("sara_register_email");
   try {
     const response = await client.post('users', {
       json: {
-        email: props.email,
+        email: registerEmail,
         nickname: value,
       },
     });
@@ -112,6 +113,7 @@ const verifyRequest = async (value) => {
       }
     });
     statusMessage.value = '註冊成功，正在寫入憑證...';
+    sessionStorage.removeItem("sara_register_email");
     exitApplication();
   } catch (e) {
     const errorCode = e?.response?.status || '無錯誤代碼';
@@ -121,7 +123,8 @@ const verifyRequest = async (value) => {
 };
 
 onMounted(() => {
-  if (props.email === null) {
+  const registerEmail = sessionStorage.getItem("sara_register_email");
+  if (!registerEmail) {
     router.replace('/');
   }
 });
