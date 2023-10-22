@@ -51,7 +51,7 @@ const description = computed(() => {
 });
 
 const cancel = () => {
-  if (router.history.length) {
+  if (window.history.length) {
     router.back();
   } else {
     router.replace('/');
