@@ -4,8 +4,7 @@
       <div class="flex flex-col">
         <label class="input-label text-base mb-2">{{ title }}</label>
         <p class="input-label text-base mb-2 text-red-600">{{ statusMessage }}</p>
-        <input-modal v-model="answer" :loading="isLoading" :placeholder="placeholder" :description="description"
-          @submit="submit" />
+        <input-modal :loading="isLoading" :placeholder="placeholder" :description="description" @submit="submit" />
       </div>
     </div>
     <div class="flex justify-center mt-5">
@@ -34,10 +33,9 @@ import { useClient } from '../clients/sara.js';
 
 const isLoading = ref(false);
 const statusMessage = ref('');
-const answer = ref('');
 const sessionId = ref('');
-const router = useRouter();
 
+const router = useRouter();
 const client = useClient();
 
 const title = computed(() => {
@@ -60,8 +58,8 @@ const cancel = () => {
   }
 };
 
-const submit = () => {
-  if (!answer.value) {
+const submit = (value) => {
+  if (!value) {
     statusMessage.value = '請輸入資料';
     return;
   }
@@ -69,17 +67,17 @@ const submit = () => {
   statusMessage.value = '';
   isLoading.value = true;
   if (!sessionId.value) {
-    doRequest();
+    doRequest(value);
   } else {
-    verifyRequest();
+    verifyRequest(value);
   }
   isLoading.value = false;
 };
 
-const doRequest = async () => {
+const doRequest = async (value) => {
   try {
     const response = await client.put('users/me/email', {
-      email: answer.value,
+      email: value,
     });
     const result = await response.json();
     if (result?.session_id) {
@@ -93,10 +91,10 @@ const doRequest = async () => {
   }
 };
 
-const verifyRequest = async () => {
+const verifyRequest = async (value) => {
   try {
     await client.patch('users/me/email', {
-      code: answer.value,
+      code: value,
       session_id: sessionId.value,
     });
     statusMessage.value = '修改成功，正在寫入憑證...';

@@ -22,7 +22,6 @@ const statusMessage = ref('');
 const sessionId = ref('');
 
 const client = useClient();
-
 const router = useRouter();
 
 const title = computed(() => {

@@ -4,8 +4,7 @@
       <div class="flex flex-col">
         <label class="input-label text-base mb-2">{{ title }}</label>
         <p class="input-label text-base mb-2 text-red-600">{{ statusMessage }}</p>
-        <input-modal v-model="answer" :loading="isLoading" :placeholder="placeholder" :description="description"
-          @submit="submit" />
+        <input-modal :loading="isLoading" :placeholder="placeholder" :description="description" @submit="submit" />
       </div>
     </div>
     <div class="flex justify-center mt-5">
@@ -42,7 +41,6 @@ const props = defineProps({
 
 const isLoading = ref(false);
 const statusMessage = ref('');
-const answer = ref('');
 const sessionId = ref('');
 
 const router = useRouter();
@@ -68,8 +66,8 @@ const cancel = () => {
   }
 };
 
-const submit = () => {
-  if (!answer.value) {
+const submit = (value) => {
+  if (!value) {
     statusMessage.value = '請輸入資料';
     return;
   }
@@ -77,18 +75,18 @@ const submit = () => {
   statusMessage.value = '';
   isLoading.value = true;
   if (!sessionId.value) {
-    doRequest();
+    doRequest(value);
   } else {
-    verifyRequest();
+    verifyRequest(value);
   }
   isLoading.value = false;
 };
 
-const doRequest = async () => {
+const doRequest = async (value) => {
   try {
     const response = await client.post('users', {
       email: props.email,
-      nickname: answer.value,
+      nickname: value,
     });
     const result = await response.json();
     if (result.session_id) {
@@ -102,10 +100,10 @@ const doRequest = async () => {
   }
 };
 
-const verifyRequest = async () => {
+const verifyRequest = async (value) => {
   try {
     await client.patch('users', {
-      code: answer.value,
+      code: value,
       session_id: sessionId.value,
     });
     statusMessage.value = '註冊成功，正在寫入憑證...';
