@@ -77,7 +77,9 @@ const submit = (value) => {
 const doRequest = async (value) => {
   try {
     const response = await client.put('users/me/email', {
-      email: value,
+      json: {
+        email: value,
+      },
     });
     const result = await response.json();
     if (result?.session_id) {
@@ -94,8 +96,10 @@ const doRequest = async (value) => {
 const verifyRequest = async (value) => {
   try {
     await client.patch('users/me/email', {
-      code: value,
-      session_id: sessionId.value,
+      json: {
+        code: value,
+        session_id: sessionId.value,
+      },
     });
     statusMessage.value = '修改成功，正在寫入憑證...';
     setTimeout(() => router.replace('/manage'), 500);
